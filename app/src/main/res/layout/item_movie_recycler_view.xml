@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:padding="12dp"
+        android:background="@drawable/round_background">
+
+        <ImageView
+            android:id="@+id/bannerVideo"
+            android:layout_width="160dp"
+            android:layout_height="180dp"
+            android:background="@drawable/place_holder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/titleMovie"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:background="@color/background"
+            android:textColor="@color/text_color_dark_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/bannerVideo"
+            app:layout_constraintEnd_toEndOf="@+id/bannerVideo"
+            app:layout_constraintStart_toStartOf="@+id/bannerVideo" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
