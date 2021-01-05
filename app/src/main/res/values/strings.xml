@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Movies</string>
+    <string name="title">title</string>
+    <string name="over_view">overView</string>
 </resources>

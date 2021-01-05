@@ -41,10 +41,11 @@ class MoviesAdapter(var movies: ArrayList<Movie>) : RecyclerView.Adapter<MoviesA
 
             Glide.with(binding.root)
                 .load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
-                .centerCrop()
                 .into(binding.bannerVideo)
 
             binding.titleMovie.text = movie.title
+            binding.overViewTextView.text = movie.overview
+            binding.ratingBar.rating = movie.voteAverage.toFloat()/2
             binding.rootLayout.setOnClickListener {onClickItem?.invoke(movie.id) }
         }
     }

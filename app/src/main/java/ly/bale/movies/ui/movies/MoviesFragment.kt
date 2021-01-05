@@ -6,12 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -38,15 +40,10 @@ class MoviesFragment : Fragment() {
         moviesAdapter = MoviesAdapter(viewModel.movies)
 
         binding = MoviesFragmentBinding.inflate(inflater, container, false).apply {
+
             recyclerView.apply {
-                layoutManager =
-                    if (context?.resources?.configuration?.layoutDirection == Configuration.ORIENTATION_LANDSCAPE)
-                        GridLayoutManager(context, 3)
-                    else
-                        GridLayoutManager(context, 2)
-
+                layoutManager = LinearLayoutManager(context)
                 adapter = moviesAdapter
-
             }
         }
 
