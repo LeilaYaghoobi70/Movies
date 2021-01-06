@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
@@ -48,9 +49,14 @@ class MovieFragment:Fragment() {
                     Glide.with(binding!!.root)
                         .load("https://image.tmdb.org/t/p/w500/${state.movie.posterPath}")
                         .into(binding!!.bannerVideo)
-                    binding?.descriptionTextView?.text = state.movie.overview
-                    binding?.titleTextView?.text = state.movie.title
+
+                    activity?.let {
+                        (it as AppCompatActivity).supportActionBar?.title =  state.movie.title
+                    }
+
+                    binding?.ratingBar?.rating = state.movie.voteAverage.toFloat()/2
                     binding?.releaseDateTextView?.text = state.movie.releaseDate
+                    binding?.descriptionTextView?.text = state.movie.overview
                 }
             }
         }
