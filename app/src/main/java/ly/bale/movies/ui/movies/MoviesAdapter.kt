@@ -24,10 +24,8 @@ class MoviesAdapter(var movies: ArrayList<Movie>) : RecyclerView.Adapter<MoviesA
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) { holder.onBind(movie = movies[position]) }
 
     fun submitList(newMovies: ArrayList<Movie>) {
-        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(MoviesCallback(newMovies, movies))
-        movies.clear()
         movies.addAll(newMovies)
-        diffResult.dispatchUpdatesTo(this)
+        this.notifyItemChanged(movies.size - newMovies.size-1)
     }
 
 
@@ -50,19 +48,4 @@ class MoviesAdapter(var movies: ArrayList<Movie>) : RecyclerView.Adapter<MoviesA
         }
     }
 
-    class MoviesCallback(
-        private var newMovies: List<Movie>, private var oldMovies: List<Movie>
-    ) : DiffUtil.Callback() {
-
-        override fun getOldListSize(): Int = oldMovies.size
-
-        override fun getNewListSize(): Int = newMovies.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldMovies[oldItemPosition].id == newMovies[newItemPosition].id
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldMovies[oldItemPosition] == newMovies[newItemPosition]
-
-    }
 }

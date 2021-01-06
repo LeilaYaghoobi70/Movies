@@ -27,18 +27,13 @@ class MoviesViewModel @ViewModelInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel(), Model<MoviesState, MoviesIntent> {
 
-    private val stateGetMovies = MoviesState.GetMovies(
-        loading = false,
-        sucsessful = false,
-        error = false,
-        errorMessage = null,
-        movies = null
-    )
+    var isLoading = false
 
+    private var pageMovie = 1
 
     override  val intentChannel: MutableSharedFlow<MoviesIntent> = MutableSharedFlow(replay = 0)
 
-    private val _viewState: MutableStateFlow<MoviesState> = MutableStateFlow(stateGetMovies)
+    private val _viewState: MutableStateFlow<MoviesState> = MutableStateFlow(MoviesState.None)
     override val viewState: StateFlow<MoviesState> = _viewState
 
     var movies = ArrayList<Movie>()
@@ -48,6 +43,7 @@ class MoviesViewModel @ViewModelInject constructor(
            intentChannel.collect { intent ->
                 when (intent) {
                     MoviesIntent.OpenApp -> getMovies()
+                    MoviesIntent.LoadMore ->getMovies()
                 }
             }
         }
@@ -55,13 +51,15 @@ class MoviesViewModel @ViewModelInject constructor(
 
     private fun getMovies() {
        viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
-            _viewState.value = stateGetMovies.copy(error = true, errorMessage = errorAnalyzer.analyze(throwable) )
+            _viewState.value = MoviesState.Error(errorMessage = errorAnalyzer.analyze(throwable) )
         }) {
-            _viewState.value = stateGetMovies.copy(loading = true)
-            val movies = repository.getMovie()
-            _viewState.value = stateGetMovies.copy(sucsessful = true, movies = movies)
+            _viewState.value = MoviesState.Loading
+            val movies = repository.getMovie(page = pageMovie++)
+             isLoading = false
+            _viewState.value = MoviesState.Success( movies = movies)
         }
     }
+
 
 
 }

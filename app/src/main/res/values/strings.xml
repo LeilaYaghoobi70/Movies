@@ -2,4 +2,6 @@
     <string name="app_name">Movies</string>
     <string name="title">title</string>
     <string name="over_view">overView</string>
+    <string name="release_date">releaseDate</string>
+    <string name="description">description</string>
 </resources>

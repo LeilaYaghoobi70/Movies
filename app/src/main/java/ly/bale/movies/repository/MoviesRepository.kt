@@ -9,9 +9,8 @@ import javax.inject.Inject
 class MoviesRepository @Inject constructor(
     private val tmdbApi: TmdbApi
 ) {
-    suspend fun getMovie() : List<Movie> = withContext(Dispatchers.IO) {
-        val movie = tmdbApi.getMovie()
-        return@withContext movie
+    suspend fun getMovie(page:Int) : List<Movie> = withContext(Dispatchers.IO) {
+        return@withContext tmdbApi.getMovie(page)
     }
 
     suspend fun getMovieById(movieId: Int) = withContext(Dispatchers.IO) {
