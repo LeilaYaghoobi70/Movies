@@ -4,4 +4,6 @@
     <string name="over_view">Overview</string>
     <string name="release_date">Release Date</string>
     <string name="description">Description</string>
+    <string name="oops">Oops!</string>
+    <string name="try_again">Try again</string>
 </resources>

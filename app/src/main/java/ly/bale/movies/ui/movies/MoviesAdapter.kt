@@ -2,7 +2,6 @@ package ly.bale.movies.ui.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ly.bale.movies.databinding.ItemMovieRecyclerViewBinding
@@ -43,8 +42,8 @@ class MoviesAdapter(var movies: ArrayList<Movie>) : RecyclerView.Adapter<MoviesA
 
             binding.titleMovie.text = movie.title
             binding.overViewTextView.text = movie.overview
-            binding.ratingBar.rating = movie.voteAverage.toFloat()/2
-            binding.rootLayout.setOnClickListener {onClickItem?.invoke(movie.id) }
+            movie.voteAverage?.let { binding.ratingBar.rating = it.toFloat()/2 }
+            binding.rootLayout.setOnClickListener { movie.serverId?.let { id -> onClickItem?.invoke(id) } }
         }
     }
 

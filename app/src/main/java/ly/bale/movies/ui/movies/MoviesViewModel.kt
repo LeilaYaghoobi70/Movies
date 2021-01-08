@@ -31,35 +31,46 @@ class MoviesViewModel @ViewModelInject constructor(
 
     private var pageMovie = 1
 
-    override  val intentChannel: MutableSharedFlow<MoviesIntent> = MutableSharedFlow(replay = 0)
+    override val intentChannel: MutableSharedFlow<MoviesIntent> = MutableSharedFlow(replay = 0)
 
     private val _viewState: MutableStateFlow<MoviesState> = MutableStateFlow(MoviesState.None)
     override val viewState: StateFlow<MoviesState> = _viewState
 
     var movies = ArrayList<Movie>()
+    var isRefresh = false
 
     init {
+
         viewModelScope.launch {
-           intentChannel.collect { intent ->
+            intentChannel.collect { intent ->
                 when (intent) {
-                    MoviesIntent.OpenApp -> getMovies()
-                    MoviesIntent.LoadMore ->getMovies()
+                    MoviesIntent.GetMovies -> getMovies()
+                    MoviesIntent.LoadMore -> getMovies()
+                    is MoviesIntent.Refresh -> {
+                        isRefresh = intent.isRefresh
+                        getMovies()
+                    }
                 }
             }
         }
     }
 
     private fun getMovies() {
-       viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
-            _viewState.value = MoviesState.Error(errorMessage = errorAnalyzer.analyze(throwable) )
+        viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
+            _viewState.value = MoviesState.Error(errorMessage = errorAnalyzer.analyze(throwable))
         }) {
             _viewState.value = MoviesState.Loading
-            val movies = repository.getMovie(page = pageMovie++)
-             isLoading = false
-            _viewState.value = MoviesState.Success( movies = movies)
+
+            if (isRefresh)
+                pageMovie = 1
+
+            val movies = repository.getMovie(pageNumber = pageMovie, isRefresh = isRefresh)
+
+            pageMovie += 1
+            isLoading = false
+
+            _viewState.value = MoviesState.Success(movies = movies)
         }
     }
-
-
 
 }

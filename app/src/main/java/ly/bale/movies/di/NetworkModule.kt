@@ -1,6 +1,5 @@
 package ly.bale.movies.di
 
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +14,6 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun getServices(gson: Gson) :TmdbApi  = RetrofitFactory(gson = gson).services
+    fun getServices() :TmdbApi  = RetrofitFactory.services
 
 }

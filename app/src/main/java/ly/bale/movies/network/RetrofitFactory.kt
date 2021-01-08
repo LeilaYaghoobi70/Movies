@@ -1,6 +1,5 @@
 package ly.bale.movies.network
 
-import com.google.gson.Gson
 import ly.bale.movies.BuildConfig
 import okhttp3.Interceptor
 
@@ -12,14 +11,14 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 import java.lang.Long
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class RetrofitFactory @Inject constructor(
-    private val gson: Gson
-) {
+object RetrofitFactory {
 
     private val apiKey = BuildConfig.TMDB_API_KEY
     private val loggingInterceptor = HttpLoggingInterceptor()
@@ -70,14 +69,15 @@ class RetrofitFactory @Inject constructor(
         .addInterceptor(authInterceptor)
         .addInterceptor(loggingInterceptor)
         .addInterceptor(responseFormatter)
-        .connectTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
         .build()
 
     private fun getRetrofit(): Retrofit = Retrofit.Builder()
         .client(clientBuilder)
         .baseUrl("https://api.themoviedb.org/3/")
         .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(ScalarsConverterFactory.create())
         .build()
 
-    val services = getRetrofit().create(TmdbApi::class.java)
+    val services: TmdbApi = getRetrofit().create()
 }

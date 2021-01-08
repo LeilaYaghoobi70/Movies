@@ -27,8 +27,18 @@ class MovieFragment:Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding  = MovieFragmentBinding.inflate(inflater, container, false)
         viewModel.movieId = args.movieId
+
+        binding  = MovieFragmentBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = this@MovieFragment.viewLifecycleOwner
+
+            retryButton.setOnClickListener {
+                lifecycleScope.launchWhenResumed {
+                    viewModel.intentChannel.emit(MovieIntent.GetMovie(viewModel.movieId!!))
+                }
+            }
+
+        }
 
         return binding?.root
     }
@@ -43,9 +53,19 @@ class MovieFragment:Fragment() {
 
         viewModel.viewState.asLiveData().observe(viewLifecycleOwner) { state ->
             when(state){
-                is MovieState.Loading -> {}
-                is MovieState.Error -> {}
+                is MovieState.Loading -> {
+                    binding?.loadingView?.visibility=  View.VISIBLE
+                    binding?.errorLayout?.visibility = View.GONE
+                }
+                is MovieState.Error -> {
+                    binding?.loadingView?.visibility =  View.GONE
+                    binding?.errorLayout?.visibility = View.VISIBLE
+                }
                 is MovieState.Success -> {
+                    binding?.errorLayout?.visibility = View.GONE
+                    binding?.rootLayout?.visibility = View.VISIBLE
+                    binding?.loadingView?.visibility = View.GONE
+
                     Glide.with(binding!!.root)
                         .load("https://image.tmdb.org/t/p/w500/${state.movie.posterPath}")
                         .into(binding!!.bannerVideo)
@@ -54,7 +74,10 @@ class MovieFragment:Fragment() {
                         (it as AppCompatActivity).supportActionBar?.title =  state.movie.title
                     }
 
-                    binding?.ratingBar?.rating = state.movie.voteAverage.toFloat()/2
+                    state.movie.voteAverage?.let {
+                        binding?.ratingBar?.rating = it.toFloat()/2
+                    }
+
                     binding?.releaseDateTextView?.text = state.movie.releaseDate
                     binding?.descriptionTextView?.text = state.movie.overview
                 }

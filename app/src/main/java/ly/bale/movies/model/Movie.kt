@@ -1,35 +1,74 @@
 package ly.bale.movies.model
 
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import ly.bale.movies.dataBase.GenreTypeConverter
 
-data  class Movie
-    (
+@Entity(tableName = "movieEntity")
+data  class  Movie (
+
     @SerializedName("vote_count")
-     val voteCount: Int,
+    @ColumnInfo(name = "voteCount")
+    var voteCount: Int?,
+
     @SerializedName("id")
-    val id: Int,
+    @ColumnInfo(name = "serverId")
+    var serverId: Int?,
+
     @SerializedName("video")
-    val video: Boolean,
+    @ColumnInfo(name = "isVideo")
+    var video: Boolean?,
+
     @SerializedName("vote_average")
-    val voteAverage: Double,
+    @ColumnInfo(name = "voteAverage")
+    var voteAverage: Double?,
+
     @SerializedName("title")
-    val title: String,
+    @ColumnInfo(name = "title")
+    var title: String?,
+
     @SerializedName("popularity")
-    val popularity: Double,
+    @ColumnInfo(name = "popularity")
+    var popularity: Double?,
+
     @SerializedName("poster_path")
-    val posterPath:String,
-     @SerializedName ("original_language")
-    val originalLanguage: String,
-    @SerializedName ("original_title")
-    val originalTitle: String,
+    @ColumnInfo(name = "posterPath")
+    var posterPath: String?,
+
+    @ColumnInfo(name = "originalLanguage")
+    @SerializedName("original_language")
+    var originalLanguage: String?,
+
+    @SerializedName("original_title")
+    @ColumnInfo(name = "originalTitle")
+    var originalTitle: String?,
+
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    @ColumnInfo(name = "backdropPath")
+    var backdropPath: String?,
+
     @SerializedName("adult")
-    val adult: Boolean,
-    @SerializedName(  "overview"  )
-    val overview:String,
+    @ColumnInfo(name = "adult")
+    var adult: Boolean?,
+
+    @SerializedName("overview")
+    @ColumnInfo(name = "overview")
+    var overview: String?,
+
     @SerializedName("release_date")
-   val  releaseDate: String,
-    @SerializedName("genre_ids")
-    val genreIds:List<Int>,
-)
+    @ColumnInfo(name = "releaseDate")
+    var releaseDate: String?,
+
+    @SerializedName("genres")
+    @TypeConverters(GenreTypeConverter::class)
+    var genreIds: List<Genres>?,
+
+) {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    var localId: Int = 0
+
+}
+
+

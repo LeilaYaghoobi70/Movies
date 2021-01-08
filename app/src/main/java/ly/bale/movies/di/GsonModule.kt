@@ -14,5 +14,5 @@ class GsonModule {
 
     @Provides
     @Singleton
-    fun gsonProvider() =  GsonBuilder().create()
+    fun gsonProvider(): Gson =  GsonBuilder().create()
 }

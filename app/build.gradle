@@ -14,10 +14,19 @@ android {
         applicationId "ly.bale.movies"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
+        versionCode 2
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
+            }
+        }
 
     }
 
@@ -46,7 +55,7 @@ android {
     buildTypes.each {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
-            def apiKey = properties.getProperty("api_key", "")
+        def apiKey = properties.getProperty("api_key", "")
 
         it.buildConfigField 'String', "TMDB_API_KEY", apiKey
         it.resValue 'string', "api_key", apiKey
@@ -56,13 +65,14 @@ android {
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.21"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -70,9 +80,18 @@ dependencies {
 
     // Retrofit dependencies
     def retrofit_version = '2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.6.0'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.6.0'
+
+    // Room
+    def room_version = "2.2.6"
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
 
     // Coroutines dependencies
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
@@ -81,7 +100,8 @@ dependencies {
     // LiveData dependencies
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 
-   //hilt dependencies
+
+    //hilt dependencies
     implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02'
     kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
     implementation "com.google.dagger:hilt-android:2.28-alpha"
@@ -92,8 +112,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
     androidTestImplementation "androidx.navigation:navigation-testing:2.3.2"
 
+
     //glide dependencies
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-
 
 }
